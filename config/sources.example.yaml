@@ -1,0 +1,228 @@
+# Crypto Discovery Sources Configuration
+# Copy to sources.yaml and customize
+# Version: 1.0.0
+
+# =============================================================================
+# SOURCE ENABLING
+# Toggle which sources are available for discovery
+# =============================================================================
+
+sources:
+  # Core Free Sources (always enabled, no keys needed)
+  defillama:
+    enabled: true
+    type: api
+    description: "TVL, protocols, yields, fees, revenue"
+    
+  coingecko:
+    enabled: true
+    type: api
+    description: "Prices, market cap, categories, volume"
+    
+  debank:
+    enabled: true
+    type: api
+    description: "Portfolio tracking, token holdings, protocol usage"
+    
+  flipside:
+    enabled: true
+    type: api
+    description: "SQL on-chain analytics, custom queries"
+    
+  blockscout:
+    enabled: true
+    type: api
+    description: "Transactions, contracts, verified code, multi-chain"
+    
+  snapshot:
+    enabled: true
+    type: api
+    description: "Governance proposals, voting, participation"
+    
+  github:
+    enabled: true
+    type: websearch
+    description: "Code activity, repos, stars, contributors"
+    
+  crypto_fundraising:
+    enabled: true
+    type: browser
+    description: "Deal flow, rounds, investors"
+    
+  dove_metrics:
+    enabled: true
+    type: browser
+    description: "Crypto fundraising database"
+    
+  twitter:
+    enabled: true
+    type: websearch
+    description: "Followers, tweets, activity (approximate without AgentCash)"
+    
+  the_block:
+    enabled: true
+    type: browser
+    description: "News, metrics, research"
+    
+  coindesk:
+    enabled: true
+    type: browser
+    description: "Crypto news"
+    
+  cointelegraph:
+    enabled: true
+    type: browser
+    description: "Crypto news"
+    
+  # Optional Free Sources (can enable/disable, optional keys for higher limits)
+  coinmarketcap:
+    enabled: true
+    type: api
+    description: "Prices, rankings, historical data"
+    
+  rootdata:
+    enabled: true
+    type: browser
+    description: "Projects, fundraising, investors"
+    
+  crunchbase:
+    enabled: true
+    type: browser
+    description: "Funding stage, company info"
+    
+  # Premium Sources (only active if API key is provided)
+  # Free fallbacks are used automatically if key is missing
+  dune:
+    enabled: false
+    type: api
+    description: "Custom SQL queries, dashboards"
+    fallback: "flipside"
+    
+  token_terminal:
+    enabled: false
+    type: api
+    description: "Fundamentals, revenue metrics, P/S ratios"
+    fallback: "defillama"
+    
+  messari:
+    enabled: false
+    type: api
+    description: "Analyst research, screener, reports"
+    fallback: "the_block"
+    
+  arkham:
+    enabled: false
+    type: api
+    description: "Entity intelligence, whale tracking, labels"
+    fallback: "debank"
+    
+  agentcash:
+    enabled: false
+    type: api
+    description: "Exact Twitter follower counts, real-time metrics"
+    fallback: "twitter"
+    
+  lunarcrush:
+    enabled: false
+    type: api
+    description: "Social sentiment scoring"
+    fallback: null
+    
+  nansen:
+    enabled: false
+    type: api
+    description: "Smart money tracking, wallet labels"
+    fallback: "arkham"
+    
+  alchemy:
+    enabled: false
+    type: api
+    description: "Deep RPC, transaction traces"
+    fallback: "blockscout"
+
+# =============================================================================
+# API KEYS
+# Add keys to unlock premium sources. Leave null to use free alternatives.
+# =============================================================================
+
+api_keys:
+  # Optional free tier keys
+  coingecko: null          # https://www.coingecko.com/en/api
+  coinmarketcap: null      # https://coinmarketcap.com/api/
+  debank: null             # https://debank.com/
+  rootdata: null           # https://www.rootdata.com/Api
+  crunchbase: null         # https://www.crunchbase.com/
+  
+  # Premium keys
+  dune: null               # https://dune.com/
+  token_terminal: null     # https://tokenterminal.com/
+  messari: null            # https://messari.io/
+  arkham: null             # https://arkham.intelligence/
+  agentcash: null          # https://agentcash.ai/ (for twit.sh)
+  lunarcrush: null         # https://lunarcrush.com/
+  nansen: null             # https://nansen.ai/
+  alchemy: null            # https://alchemy.com/
+
+# =============================================================================
+# CUSTOM SOURCES
+# Add your own data sources (Excel, Sheets, APIs, etc.)
+# =============================================================================
+
+custom_sources: []
+# Example:
+# - name: "event_attendees"
+#   type: "excel"
+#   path: "~/Documents/events.xlsx"
+#   schema:
+#     company: "Company Name"
+#     website: "URL"
+#     chain: "Blockchain"
+#
+# - name: "portfolio"
+#   type: "sheets"
+#   url: "https://docs.google.com/spreadsheets/d/..."
+#   schema:
+#     project: "Project Name"
+#     invested: "Amount"
+
+# =============================================================================
+# RATE LIMITING
+# Configure delays to avoid rate limits
+# =============================================================================
+
+rate_limiting:
+  enabled: true
+  default_delay_ms: 2000
+  
+  # Per-source type delays
+  delays:
+    api: 500        # API calls (defillama, coingecko, etc.)
+    websearch: 1000 # Web searches (twitter, github)
+    browser: 2000   # Browser scraping (rootdata, crunchbase)
+    custom: 0       # Local files
+
+# =============================================================================
+# DISCOVERY PREFERENCES
+# =============================================================================
+
+discovery:
+  # Default number of results to show
+  default_limit: 10
+  
+  # Maximum results
+  max_results: 50
+  
+  # Show matched filters in results
+  show_filters: true
+  
+  # Prompt to research after discovery
+  prompt_research: true
+  
+  # Show which source each metric came from
+  show_source_labels: true
+  
+  # Show data quality notes (exact vs approximate)
+  show_data_quality: true
+  
+  # Auto-save discovered projects to watchlist
+  auto_watchlist: false

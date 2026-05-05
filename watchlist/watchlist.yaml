@@ -1,0 +1,16 @@
+# Crypto Discovery Watchlist
+# Add projects you want to track
+
+projects: []
+# Example:
+# - name: "Uniswap"
+#   added: "2026-05-05T10:00:00"
+#   discovered_via: "defillama"
+#   tags: ["dex", "ethereum", "amm"]
+#   notes: "Dominant DEX, $4B+ TVL"
+#
+# - name: "Aave"
+#   added: "2026-05-03T14:30:00"
+#   discovered_via: "rootdata"
+#   tags: ["lending", "multi-chain"]
+#   notes: "Leading lending protocol"

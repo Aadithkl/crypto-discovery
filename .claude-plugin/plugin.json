@@ -1,0 +1,13 @@
+{
+  "name": "crypto-discovery",
+  "description": "Crypto research sub-agent for Claude Code. Discover and research crypto/Web3 projects using 25+ data sources. Free core works out of the box.",
+  "version": "1.0.0",
+  "author": "Aadithkl",
+  "license": "MIT",
+  "repository": "https://github.com/Aadithkl/crypto-discovery",
+  "keywords": ["crypto", "web3", "research", "defi", "blockchain", "claude", "sub-agent"],
+  "requires": {
+    "platforms": ["claude-code", "cline", "gemini-cli", "opencodel"],
+    "tools": ["WebFetch", "WebSearch", "Bash"]
+  }
+}
