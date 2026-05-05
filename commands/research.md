@@ -98,7 +98,7 @@ Run all phases in parallel where possible. Each phase queries the relevant sourc
 
 ### Phase 3: Funding & Investors
 
-**Sources:** CryptoFundraising.info, Dove Metrics, RootData, Crunchbase, The Block
+**Sources:** CryptoFundraising.info, RootData, Crunchbase, The Block
 
 **Gather:**
 - Funding rounds (seed, series a, etc.)
@@ -225,7 +225,7 @@ No fundraising data found. This may indicate:
 
 **Tasks:**
 1. Cross-check TVL across DeFiLlama, CoinGecko, DeBank
-2. Cross-check funding across CryptoFundraising, Dove Metrics, RootData
+2. Cross-check funding across CryptoFundraising, RootData
 3. Cross-check token price across CoinGecko, CoinMarketCap
 4. Flag any discrepancies
 5. Note data quality issues

@@ -11,7 +11,7 @@ Interactive wizard to configure crypto-discovery sources, API keys, and preferen
 
 Welcome! This wizard will configure your research sub-agent.
 
-Good news: 14 sources work without any API keys.
+Good news: 13 sources work without any API keys.
 Add optional keys to unlock 11 more premium sources.
 
 Estimated time: 2 minutes.
@@ -40,7 +40,7 @@ Install: https://github.com/microsoft/playwright-mcp
 ```markdown
 ## Core Free Sources (Auto-enabled)
 
-These 14 sources work without API keys:
+These 13 sources work without API keys:
 
 ✓ DeFiLlama — TVL, protocols, yields, fees
 ✓ CoinGecko — Prices, market cap, categories
@@ -50,7 +50,7 @@ These 14 sources work without API keys:
 ✓ Snapshot — Governance proposals
 ✓ GitHub — Code activity
 ✓ CryptoFundraising.info — Deal flow
-✓ Dove Metrics — Fundraising database
+✓ RootData — Projects, fundraising, investors
 ✓ Twitter WebSearch — Social data
 ✓ The Block — News & research
 ✓ CoinDesk — Crypto news
@@ -255,10 +255,10 @@ sources:
     type: browser
     description: "Deal flow, rounds, investors"
     
-  dove_metrics:
+  rootdata:
     enabled: true
     type: browser
-    description: "Crypto fundraising database"
+    description: "Projects, fundraising, investors"
     
   twitter:
     enabled: true

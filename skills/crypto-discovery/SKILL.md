@@ -2,7 +2,7 @@
 name: crypto-discovery
 description: |
   Crypto research sub-agent for Claude Code. Discover and research crypto/Web3 projects 
-  using 25+ data sources. Free core works out of the box. Add API keys to unlock premium data.
+  using 24+ data sources. Free core works out of the box. Add API keys to unlock premium data.
 version: 1.0.0
 ---
 
@@ -14,7 +14,7 @@ A general-purpose crypto research sub-agent that can be installed into Claude Co
 
 - **Neutral, not salesy.** No BD language, no investment advice, no hype.
 - **Pure factual research.** Metrics, funding, tech, community, governance.
-- **Free core, optional premium.** 14 sources work without any API keys. Add keys to unlock 11 more.
+- **Free core, optional premium.** 13 sources work without any API keys. Add keys to unlock 11 more.
 - **Cite everything.** Every fact must have a source URL.
 
 ## Commands
@@ -50,7 +50,7 @@ cp ~/.claude/plugins/crypto-discovery/skills/crypto-discovery/SKILL.md ~/.claude
 
 ## Source Catalog (25 Sources)
 
-### Core Free (14 sources — no keys needed)
+### Core Free (13 sources — no keys needed)
 
 | Source | Type | Data |
 |--------|------|------|
@@ -62,7 +62,7 @@ cp ~/.claude/plugins/crypto-discovery/skills/crypto-discovery/SKILL.md ~/.claude
 | Snapshot | API | Governance proposals, voting |
 | GitHub | WebSearch | Repos, stars, commits, contributors |
 | CryptoFundraising.info | Browser | Deal flow, rounds, investors |
-| Dove Metrics | Browser | Crypto fundraising database |
+| RootData | Browser | Projects, fundraising, investors |
 | Twitter/X | WebSearch | Followers, tweets, activity |
 | The Block | Browser | News, metrics, research |
 | CoinDesk | Browser | General crypto news |

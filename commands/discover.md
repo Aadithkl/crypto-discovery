@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Discover crypto/Web3 projects using natural language queries across 25+ data sources.
+Discover crypto/Web3 projects using natural language queries across 24+ data sources.
 
 ## Step 0: Load Config
 
@@ -29,7 +29,7 @@ If no source context is found, infer from keywords or prompt:
 - 'protocols with high yield on Base'
 
 Available sources: defillama, coingecko, debank, flipside, blockscout, 
-rootdata, crypto_fundraising, dove_metrics, twitter, github, crunchbase,
+rootdata, crypto_fundraising, twitter, github, crunchbase,
 orbis, and your custom sources."
 ```
 
@@ -45,7 +45,7 @@ Map input to source types using keyword matching:
 | "query", "analytics", "dashboard" | Flipside Crypto | Dune (if key) |
 | "contract", "transaction", "verified" | Blockscout | Alchemy (if key) |
 | "fundraising", "raised", "investors" | CryptoFundraising.info | RootData |
-| "deal flow", "rounds" | Dove Metrics | CryptoFundraising.info |
+| "deal flow", "rounds" | RootData | CryptoFundraising.info |
 | "followers", "twitter", "social" | Twitter WebSearch | AgentCash (if key) |
 | "code", "repo", "github", "commits" | GitHub | — |
 | "governance", "proposal", "vote" | Snapshot | — |
@@ -93,7 +93,7 @@ Or use their SQL API
 Return: Custom query results
 ```
 
-### Browser Sources (RootData, CryptoFundraising, Dove Metrics, Crunchbase)
+### Browser Sources (RootData, CryptoFundraising, Crunchbase)
 
 **If Playwright MCP is available:**
 ```

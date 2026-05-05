@@ -1,11 +1,11 @@
 # Crypto Discovery
 
-A general-purpose crypto/Web3 research sub-agent for Claude Code and compatible platforms. Discover and deep-research projects using 25+ data sources. The free core works out of the box — add optional API keys to unlock premium data.
+A general-purpose crypto/Web3 research sub-agent for Claude Code and compatible platforms. Discover and deep-research projects using 24+ data sources. The free core works out of the box — add optional API keys to unlock premium data.
 
 ## Features
 
-- **25+ Data Sources** — DeFiLlama, CoinGecko, DeBank, Flipside, Blockscout, RootData, CryptoFundraising, Dove Metrics, Twitter, GitHub, Snapshot, and more
-- **Free Core** — 14 sources work without any API keys
+- **24+ Data Sources** — DeFiLlama, CoinGecko, DeBank, Flipside, Blockscout, RootData, CryptoFundraising, Twitter, GitHub, Snapshot, and more
+- **Free Core** — 13 sources work without any API keys
 - **Premium Upgrades** — Add keys for Dune, Token Terminal, Messari, Arkham, AgentCash, and more
 - **Natural Language Queries** — "defillama protocols under 5M TVL on Base"
 - **Deep Research** — 7-phase neutral research: Overview → On-Chain → Funding → Social → Technical → Governance → Verify
@@ -55,7 +55,7 @@ cp ~/.claude/plugins/crypto-discovery/skills/crypto-discovery/SKILL.md ~/.claude
 
 ## Source Catalog
 
-### Core Free (14 sources, no keys)
+### Core Free (13 sources, no keys)
 
 | Source | Type | Data |
 |--------|------|------|
@@ -67,7 +67,7 @@ cp ~/.claude/plugins/crypto-discovery/skills/crypto-discovery/SKILL.md ~/.claude
 | Snapshot | API | Governance |
 | GitHub | WebSearch | Code activity |
 | CryptoFundraising.info | Browser | Deal flow |
-| Dove Metrics | Browser | Fundraising DB |
+| RootData | Browser | Projects, fundraising, investors |
 | Twitter | WebSearch | Social data |
 | The Block | Browser | News |
 | CoinDesk | Browser | News |
@@ -123,7 +123,7 @@ crypto-discovery/
 
 The `lib/source_manager.py` module provides:
 
-- `SourceManager` — Orchestrates all 25 sources
+- `SourceManager` — Orchestrates all 24 sources
 - `QueryInterpreter` — Parses natural language into structured queries
 - `RateLimiter` — Per-source-type rate limiting
 - `ResultMerger` — Merges and scores multi-source results

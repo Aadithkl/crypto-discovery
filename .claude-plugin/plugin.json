@@ -1,6 +1,6 @@
 {
   "name": "crypto-discovery",
-  "description": "Crypto research sub-agent for Claude Code. Discover and research crypto/Web3 projects using 25+ data sources. Free core works out of the box.",
+  "description": "Crypto research sub-agent for Claude Code. Discover and research crypto/Web3 projects using 24+ data sources. Free core works out of the box.",
   "version": "1.0.0",
   "author": "Aadithkl",
   "license": "MIT",

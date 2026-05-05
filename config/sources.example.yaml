@@ -49,11 +49,6 @@ sources:
     type: browser
     description: "Deal flow, rounds, investors"
     
-  dove_metrics:
-    enabled: true
-    type: browser
-    description: "Crypto fundraising database"
-    
   twitter:
     enabled: true
     type: websearch

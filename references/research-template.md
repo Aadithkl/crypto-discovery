@@ -79,7 +79,7 @@
 **Latest Valuation:** ${valuation} (if available)
 **Key Investors:** {list}
 
-*Sources: CryptoFundraising.info, Dove Metrics, RootData, Crunchbase*
+*Sources: CryptoFundraising.info, RootData, Crunchbase*
 
 ---
 

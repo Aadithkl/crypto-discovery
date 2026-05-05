@@ -73,7 +73,7 @@ class QueryInterpreter:
         "snapshot": ["snapshot", "governance", "proposal", "vote"],
         "github": ["github", "code", "repo", "commit", "developer"],
         "crypto_fundraising": ["fundraising", "raised", "investors", "deal"],
-        "dove_metrics": ["dove metrics", "dovemetrics"],
+        "rootdata": ["rootdata", "project", "fundraising", "raised"],
         "rootdata": ["rootdata", "project"],
         "crunchbase": ["crunchbase", "funding", "series"],
         "twitter": ["twitter", "x.com", "followers", "social"],
@@ -257,7 +257,6 @@ class SourceManager:
         "github": "websearch",
         "twitter": "websearch",
         "crypto_fundraising": "browser",
-        "dove_metrics": "browser",
         "rootdata": "browser",
         "crunchbase": "browser",
         "the_block": "browser",
@@ -407,7 +406,7 @@ class SourceManager:
             params["method"] = "GET"
             params["instructions"] = self._build_github_instructions(filters)
 
-        elif source in ["crypto_fundraising", "rootdata", "dove_metrics", "crunchbase"]:
+        elif source in ["crypto_fundraising", "rootdata", "crunchbase"]:
             params["instructions"] = self._build_browser_instructions(source, filters)
 
         return params
@@ -540,7 +539,6 @@ class SourceManager:
         site_map = {
             "crypto_fundraising": "https://crypto-fundraising.info",
             "rootdata": "https://www.rootdata.com",
-            "dove_metrics": "https://dovemetrics.com",
             "crunchbase": "https://www.crunchbase.com"
         }
         base_url = site_map.get(source, "")
@@ -753,7 +751,7 @@ class ConfigLoader:
                 "snapshot": {"enabled": True, "type": "api"},
                 "github": {"enabled": True, "type": "websearch"},
                 "crypto_fundraising": {"enabled": True, "type": "browser"},
-                "dove_metrics": {"enabled": True, "type": "browser"},
+                "rootdata": {"enabled": True, "type": "browser"},
                 "twitter": {"enabled": True, "type": "websearch"},
                 "the_block": {"enabled": True, "type": "browser"},
                 "coindesk": {"enabled": True, "type": "browser"},
