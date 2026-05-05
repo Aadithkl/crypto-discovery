@@ -1,0 +1,9 @@
+topic: ""
+items: []
+sources_used:
+  - web
+  - api
+execution:
+  batch_size: 5
+  items_per_agent: 1
+  output_dir: "./results"

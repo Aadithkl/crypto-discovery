@@ -1,0 +1,120 @@
+field_categories:
+  - category: Overview
+    fields:
+      - name: name
+        description: "Project name"
+        required: true
+      - name: website
+        description: "Official website URL"
+        required: true
+      - name: founded
+        description: "Year founded"
+        required: false
+      - name: category
+        description: "Category (DeFi, L2, Infra, NFT, Gaming, etc.)"
+        required: true
+      - name: chains
+        description: "Chains deployed on"
+        required: true
+      - name: description
+        description: "2-3 sentence description of the project"
+        required: true
+      - name: token_symbol
+        description: "Token symbol if exists, null if no token"
+        required: false
+
+  - category: On-Chain Data
+    fields:
+      - name: tvl
+        description: "Total Value Locked in USD"
+        required: true
+      - name: tvl_change_7d
+        description: "TVL change in 7 days (%)"
+        required: false
+      - name: market_cap
+        description: "Market cap in USD"
+        required: false
+      - name: fdv
+        description: "Fully Diluted Valuation in USD"
+        required: false
+      - name: token_price
+        description: "Current token price in USD"
+        required: false
+      - name: fees_24h
+        description: "24h fees in USD"
+        required: false
+      - name: revenue_24h
+        description: "24h revenue in USD"
+        required: false
+      - name: active_addresses_24h
+        description: "Number of active addresses in 24h"
+        required: false
+      - name: transactions_24h
+        description: "Number of transactions in 24h"
+        required: false
+
+  - category: Funding
+    fields:
+      - name: total_raised
+        description: "Total funding raised in USD"
+        required: false
+      - name: funding_rounds
+        description: "List of funding rounds with round name, date, amount, and investors"
+        required: false
+      - name: lead_investors
+        description: "Key lead investors"
+        required: false
+      - name: latest_valuation
+        description: "Latest known valuation in USD"
+        required: false
+
+  - category: Social
+    fields:
+      - name: twitter_handle
+        description: "Twitter/X handle"
+        required: false
+      - name: twitter_followers
+        description: "Twitter/X follower count"
+        required: false
+      - name: github_org
+        description: "GitHub organization URL"
+        required: false
+      - name: github_stars
+        description: "Total GitHub stars across repos"
+        required: false
+      - name: github_last_commit
+        description: "Date of last commit"
+        required: false
+      - name: github_contributors
+        description: "Number of GitHub contributors"
+        required: false
+      - name: discord_members
+        description: "Discord member count"
+        required: false
+
+  - category: Technical
+    fields:
+      - name: tech_stack
+        description: "Technologies and languages used"
+        required: false
+      - name: audits
+        description: "Audit firms, dates, and summary of findings"
+        required: false
+      - name: security_incidents
+        description: "Known hacks, exploits, or security incidents"
+        required: false
+      - name: bug_bounty
+        description: "Bug bounty program status and platform"
+        required: false
+
+  - category: Governance
+    fields:
+      - name: snapshot_space
+        description: "Snapshot governance space URL"
+        required: false
+      - name: proposals_count
+        description: "Number of governance proposals"
+        required: false
+      - name: participation_rate
+        description: "Governance participation rate (%)"
+        required: false

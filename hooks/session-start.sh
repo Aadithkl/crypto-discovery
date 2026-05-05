@@ -10,7 +10,7 @@ echo "--- Crypto Discovery ---"
 
 # Check for config
 if [ ! -f "$CONFIG" ]; then
-  echo "⚠ No config found. Run /crypto-discovery setup to configure."
+  echo "No config found. Run /crypto-discovery setup to configure."
   exit 0
 fi
 
@@ -29,6 +29,16 @@ if [ -f "$WATCHLIST" ]; then
   COUNT=$(grep -c "name:" "$WATCHLIST" 2>/dev/null || echo "0")
   if [ "$COUNT" -gt 0 ]; then
     echo "Watchlist: $COUNT projects tracked"
+  fi
+fi
+
+# Check deep research results
+RESEARCH_DIR="$PLUGIN_DIR/Research"
+if [ -d "$RESEARCH_DIR" ]; then
+  JSON_COUNT=$(find "$RESEARCH_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+  REPORT_COUNT=$(find "$RESEARCH_DIR" -name "report.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$JSON_COUNT" -gt 0 ]; then
+    echo "Deep research: $JSON_COUNT projects researched, $REPORT_COUNT reports"
   fi
 fi
 

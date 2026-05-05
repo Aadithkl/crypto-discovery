@@ -1,293 +1,299 @@
-# /crypto-discovery research — Deep Research on a Project
+# /crypto-discovery research — Deep Research Pipeline
 
 ## Purpose
 
-Deep-dive factual research on a specific crypto/Web3 project. Neutral, no investment advice.
+Deep-dive factual research on crypto/Web3 projects using parallel sub-agents, structured field validation, and multi-source data. Supports both single projects and multi-item comparative research.
+
+Neutral, no investment advice.
 
 ## Step 0: Load Config
 
 Read `config/sources.yaml`. If missing, run `/crypto-discovery setup`.
 
-## Step 1: Resolve Project Name
+## Step 1: Detect Mode
 
-User provides project name (e.g., "Uniswap", "Aave", "Jito").
+Determine if input is a **single project** or a **topic**:
 
-If ambiguous:
-```
-Multiple matches found:
-1. Uniswap (DEX protocol, Ethereum)
-2. Uniswap Labs (Company behind Uniswap)
-3. UNI (Token)
+- **Single project**: Known project name (e.g., "Uniswap", "Aave", "Jito")
+  → Create 1-item outline
+- **Topic**: Descriptive phrase (e.g., "L2 protocols on Ethereum", "DeFi lending protocols")
+  → Generate multi-item outline
 
-Which one? Reply with the number or clarify.
-```
+## Step 2: Generate Outline
 
-## Step 2: Execute 7-Phase Research
+### If Single Project
 
-Run all phases in parallel where possible. Each phase queries the relevant sources.
+Create 1-item outline:
 
-### Phase 1: Overview
-
-**Sources:** CoinGecko, CoinMarketCap, RootData, Crunchbase, The Block
-
-**Gather:**
-- Name, website, founded date, HQ
-- Category (DeFi, NFT, Infrastructure, Gaming, etc.)
-- Chains deployed on
-- Description (2-3 sentences)
-
-**Output:**
-```markdown
-## 1. Overview
-
-| Field | Detail |
-|-------|--------|
-| Name | {name} |
-| Website | {url} |
-| Founded | {year} |
-| HQ | {location} |
-| Category | {category} |
-| Chains | {ethereum, arbitrum, base, solana, etc.} |
-| Description | {2-3 sentences} |
+```yaml
+topic: "Uniswap"
+items:
+  - name: "Uniswap"
+    category: "DEX"
+    description: "Decentralized exchange protocol on Ethereum"
+    chains: ["ethereum"]
+execution:
+  batch_size: 5
+  items_per_agent: 1
+  output_dir: "./results"
 ```
 
-### Phase 2: On-Chain Data
+### If Topic
 
-**Sources:** DeFiLlama, CoinGecko, DeBank, Blockscout, Flipside Crypto, Dune (if key)
+**Step 2a: Generate initial framework**
 
-**Gather:**
-- TVL (total value locked)
-- TVL change (1d, 7d, 1m)
-- Chains with TVL breakdown
-- Category
-- Fees (24h)
-- Revenue (24h)
-- Token: symbol, market cap, FDV, price, price change
-- Top holders / portfolio breakdown
-- Contract verification status
-- Transaction volume
+Use model knowledge to list relevant projects for the topic.
 
-**Output:**
-```markdown
-## 2. On-Chain Data
+**Step 2b: Web search supplement**
 
-### DeFiLlama
-| Metric | Value |
-|--------|-------|
-| TVL | ${tvl} |
-| TVL Change (24h) | {change}% |
-| Chains | {chains} |
-| Category | {category} |
-| Fees (24h) | ${fees} |
-| Revenue (24h) | ${revenue} |
-
-### Token
-| Metric | Value |
-|--------|-------|
-| Symbol | {token} |
-| Market Cap | ${mcap} |
-| FDV | ${fdv} |
-| Price | ${price} |
-| Price Change (24h) | {change}% |
-
-### Holders & Activity
-- Top holders: {summary from DeBank/Blockscout}
-- Contract verified: {yes/no} (Blockscout)
-- Active addresses (24h): {count}
-```
-
-### Phase 3: Funding & Investors
-
-**Sources:** CryptoFundraising.info, RootData, Crunchbase, The Block
-
-**Gather:**
-- Funding rounds (seed, series a, etc.)
-- Amount raised per round
-- Lead investors
-- Total raised
-- Valuation (if available)
-
-**Output:**
-```markdown
-## 3. Funding & Investors
-
-| Round | Date | Amount | Lead Investors | Other Investors |
-|-------|------|--------|----------------|-----------------|
-| Seed | {date} | ${amount} | {lead} | {others} |
-| Series A | {date} | ${amount} | {lead} | {others} |
-
-**Total Raised:** ${total}
-**Latest Valuation:** ${valuation} (if available)
-**Key Investors:** {list}
-```
-
-If no funding data found:
-```
-No fundraising data found. This may indicate:
-- Bootstrapped project
-- No public fundraising
-- Data not yet indexed by sources
-```
-
-### Phase 4: Social & Community
-
-**Sources:** Twitter WebSearch, AgentCash (if key), GitHub, The Block
-
-**Gather:**
-- Twitter/X handle, followers, following, account age
-- Recent tweet activity
-- Discord/Telegram links and member counts (if available)
-- GitHub repos, stars, contributors
-- Developer activity
-
-**Output:**
-```markdown
-## 4. Social & Community
-
-### Twitter/X
-| Metric | Value | Source |
-|--------|-------|--------|
-| Handle | @{handle} | |
-| Followers | {count} | {AgentCash exact OR WebSearch approx} |
-| Account Age | {date} | |
-| Recent Activity | {active/stale} | |
-
-### Development
-| Metric | Value |
-|--------|-------|
-| GitHub Org | {org} |
-| Repos | {count} |
-| Stars | {count} |
-| Contributors | {count} |
-| Last Commit | {date} |
-| Primary Language | {language} |
-```
-
-### Phase 5: Technical
-
-**Sources:** GitHub, Blockscout, The Block, CoinDesk
-
-**Gather:**
-- Tech stack (solidity, rust, etc.)
-- Smart contract audits (firm, date, findings)
-- Architecture (if documented)
-- Security incidents (if any)
-
-**Output:**
-```markdown
-## 5. Technical
-
-### Tech Stack
-{List of technologies used}
-
-### Audits
-| Firm | Date | Findings |
-|------|------|----------|
-| {firm} | {date} | {summary} |
-
-### Security
-- Major incidents: {list or "None found"}
-- Bug bounties: {status}
-```
-
-### Phase 6: Governance
-
-**Sources:** Snapshot, The Block
-
-**Gather:**
-- Snapshot space
-- Number of proposals
-- Proposal types
-- Participation rate
-- Voting power distribution
-
-**Output:**
-```markdown
-## 6. Governance
-
-### Snapshot
-| Metric | Value |
-|--------|-------|
-| Space | {space_url} |
-| Proposals | {count} |
-| Participation Rate | {rate}% |
-| Active Voters | {count} |
-
-### Recent Proposals
-| Title | Status | Participation |
-|-------|--------|---------------|
-| {title} | {passed/failed} | {votes} |
-```
-
-### Phase 7: Verify & Cross-Reference
-
-**Sources:** All of the above
-
-**Tasks:**
-1. Cross-check TVL across DeFiLlama, CoinGecko, DeBank
-2. Cross-check funding across CryptoFundraising, RootData
-3. Cross-check token price across CoinGecko, CoinMarketCap
-4. Flag any discrepancies
-5. Note data quality issues
-
-**Output:**
-```markdown
-## 7. Data Quality & Verification
-
-### Cross-Reference Checks
-| Metric | Source A | Source B | Match? |
-|--------|----------|----------|--------|
-| TVL | ${a} (DeFiLlama) | ${b} (DeBank) | {✓/✗} |
-| Market Cap | ${a} (CoinGecko) | ${b} (CoinMarketCap) | {✓/✗} |
-| Total Raised | ${a} (CryptoFundraising) | ${b} (RootData) | {✓/✗} |
-
-### Discrepancies Found
-- {List any conflicting data with sources}
-
-### Data Gaps
-- {Metrics that could not be found}
-```
-
-## Step 3: Competitive Landscape
-
-**Sources:** DeFiLlama, CoinGecko, The Block
-
-**Gather:**
-- Direct competitors in same category/chain
-- Key differentiators
-
-**Output:**
-```markdown
-## 8. Competitive Landscape
-
-| Competitor | Category | Key Metric | Differentiator |
-|------------|----------|------------|----------------|
-| {name} | {category} | {tvl/market cap} | {brief} |
-| {name} | {category} | {tvl/market cap} | {brief} |
-```
-
-## Step 4: Compile Final Report
-
-Use `references/research-template.md` as the structure. Fill in all sections.
-
-Save to: `Research/{project_name}-{date}.md` (or user-configured path)
-
-## Step 5: Offer Next Steps
+Launch a background sub-agent to search for latest projects matching the topic using crypto sources:
 
 ```
-Research complete. Saved to: Research/{project_name}-{date}.md
+Search for {topic} related crypto projects
+Use DeFiLlama, CoinGecko, RootData to find projects
+List project names, categories, and brief descriptions
+```
+
+**Step 2c: Merge**
+
+Merge model knowledge items with web search findings. Deduplicate by project name.
+
+**Step 2d: Confirm with user**
+
+Show the outline and ask:
+
+```
+Research Topic: {topic}
+Items ({count}):
+  1. {name} — {description}
+  2. {name} — {description}
+  ...
+
+Add/remove items? Confirm to proceed.
+```
+
+### Save Outline
+
+Save to `Research/{topic_slug}/outline.yaml`.
+
+## Step 3: Field Schema
+
+Load defaults from `references/deep-research-fields.yaml`.
+
+Show field categories and counts:
+
+```
+Using default crypto field categories:
+- Overview (7 fields, 4 required)
+- On-Chain Data (9 fields, 1 required)
+- Funding (4 fields, 0 required)
+- Social (7 fields, 0 required)
+- Technical (4 fields, 0 required)
+- Governance (3 fields, 0 required)
+
+Customize fields? (add/remove/rename categories or fields)
+```
+
+Allow user to:
+- Add custom fields
+- Remove categories or fields
+- Rename field descriptions
+- Change required flags
+
+Save to `Research/{topic_slug}/fields.yaml`.
+
+## Step 4: Execute Deep Research (Parallel Sub-Agents)
+
+### Step 4a: Resume Check
+
+Scan `Research/{topic_slug}/results/*.json` for completed items. Skip items that already have valid JSONs.
+
+### Step 4b: Batch Execution
+
+Batch items by `batch_size` (default: 5). For each item, launch a background sub-agent using the template from `references/deep-research-subagent.md`.
+
+**Parameter Retrieval**:
+
+- `{item_name}`: Item's name field from outline
+- `{item_category}`: Item's category field
+- `{item_description}`: Item's description field
+- `{item_related_info}`: Item's complete YAML content from outline
+- `{output_dir}`: `Research/{topic_slug}/results`
+- `{fields_path}`: Absolute path to `Research/{topic_slug}/fields.yaml`
+- `{output_path}`: Absolute path to `Research/{topic_slug}/results/{item_slug}.json`
+- `{validate_path}`: Absolute path to `lib/deep-research/validate_json.py`
+
+**Sub-Agent Prompt Template** (from `references/deep-research-subagent.md`):
+
+```
+Research {item_name}, output structured JSON to {output_path}
+
+Field definitions: Read {fields_path}
+Source routing: Use crypto-discovery's 24 data sources
+Citation rules: Every fact needs source URL
+Data quality: Label exact vs approximate
+Uncertainty: Mark [uncertain] + uncertain[] array
+Output: {output_path}
+Validation: python {validate_path} -f {fields_path} -j {output_path}
+Task complete only after validation passes.
+```
+
+**One-shot Example** (assuming researching Arbitrum):
+
+```
+Research name: Arbitrum
+category: L2
+description: Optimistic rollup on Ethereum by Offchain Labs
+chains: ethereum
+
+Output structured JSON to Research/l2-protocols-on-ethereum/results/arbitrum.json
+
+Field definitions: Read Research/l2-protocols-on-ethereum/fields.yaml
+
+Source routing:
+- Overview: CoinGecko, RootData, CoinMarketCap
+- On-Chain Data: DeFiLlama, CoinGecko, DeBank, Blockscout
+- Funding: CryptoFundraising.info, RootData
+- Social: Twitter WebSearch, GitHub WebSearch
+- Technical: GitHub, Blockscout
+- Governance: Snapshot
+
+Rules:
+1. Cite every fact with source URL
+2. Label exact vs approximate metrics
+3. Cross-reference key metrics across sources
+4. Flag data conflicts if sources disagree
+5. Mark uncertain values with [uncertain]
+6. Add uncertain[] array listing all uncertain field names
+7. All values in English
+
+Validation: python lib/deep-research/validate_json.py -f fields.yaml -j results/arbitrum.json
+Task complete only after validation passes.
+```
+
+### Step 4c: Wait and Monitor
+
+- Wait for current batch to complete
+- Display progress: "5/13 items complete"
+- Note any items with validation issues
+- Launch next batch
+
+### Step 4d: Summary
+
+After all items complete:
+
+```
+Deep research complete!
+- {completed}/{total} items researched
+- {uncertain_count} items have uncertain fields (noted in JSON)
+- Results: Research/{topic_slug}/results/
+```
+
+## Step 5: Generate Report
+
+### Step 5a: Scan Results
+
+Read all JSONs from `Research/{topic_slug}/results/`.
+
+### Step 5b: Ask User
+
+Ask which fields to display in the summary table:
+
+```
+Available fields for summary table:
+  category, tvl, market_cap, chains, total_raised, twitter_followers, ...
+
+Which fields to include? (default: category, tvl, market_cap, chains, total_raised)
+```
+
+### Step 5c: Generate Report
+
+Run `python lib/deep-research/generate_report.py`:
+
+```bash
+python lib/deep-research/generate_report.py \
+  --topic "{topic}" \
+  --fields Research/{topic_slug}/fields.yaml \
+  --dir Research/{topic_slug}/results \
+  --output Research/{topic_slug}/report.md \
+  --summary-fields category tvl market_cap chains total_raised
+```
+
+The report includes:
+- **Summary table** (multi-item): One row per project with key metrics
+- **Table of Contents**: Anchor links to each project section
+- **Detailed sections**: One per project, grouped by field category
+- **Data quality notes**: Uncertain fields flagged per project
+- **Source citations**: Every fact includes source URL
+
+### Step 5d: Display Report Path
+
+```
+Report saved: Research/{topic_slug}/report.md
 
 Next:
 - /crypto-discovery watchlist add {project} — save for tracking
-- /crypto-discovery research {competitor} — compare with competitor
-- /crypto-discovery discover {category} on {chain} — find similar projects
+- /crypto-discovery research continue — re-research uncertain fields
+- /crypto-discovery research report — regenerate with different fields
 ```
+
+## Sub-Command: continue
+
+Resume incomplete research. Skip items that already have valid JSONs.
+
+```
+/crypto-discovery research continue
+```
+
+1. Find `Research/{topic}/outline.yaml`
+2. Scan `results/*.json` for completed items
+3. Launch sub-agents only for items without valid JSONs
+4. Continue from Step 4
+
+## Sub-Command: report
+
+Regenerate report from existing JSONs (without re-running research).
+
+```
+/crypto-discovery research report
+```
+
+1. Find `Research/{topic}/outline.yaml`
+2. Scan `results/*.json`
+3. Ask for summary fields
+4. Run `generate_report.py`
+5. Save report
 
 ## Rules
 
 1. **Factual only** — No hype, no investment advice, no "great opportunity"
 2. **Cite everything** — Every fact must have a source URL
 3. **Label approximations** — "Followers: ~50K (Twitter WebSearch, approximate)"
-4. **Flag conflicts** — If sources disagree, show both values
+4. **Flag conflicts** — If sources disagree, show both values, flag as "Data Conflict"
 5. **Note gaps** — If data is missing, say so explicitly
 6. **Neutral tone** — Describe what exists, not what could be
+7. **Validate** — Every sub-agent must pass validation before completing
+8. **Uncertainty** — Mark uncertain fields with `[uncertain]` and list in `uncertain[]` array
+9. **Model-agnostic** — Sub-agents use platform's default model, no hardcoding
+10. **Resume support** — Skip completed items on continue
+
+## Output Directory Structure
+
+```
+Research/
+├── uniswap/
+│   ├── outline.yaml
+│   ├── fields.yaml
+│   ├── results/
+│   │   └── uniswap.json
+│   └── report.md
+├── l2-protocols-on-ethereum/
+│   ├── outline.yaml
+│   ├── fields.yaml
+│   ├── results/
+│   │   ├── arbitrum.json
+│   │   ├── optimism.json
+│   │   ├── base.json
+│   │   └── ...
+│   └── report.md
+```

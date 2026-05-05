@@ -29,7 +29,6 @@ TVL: $4.2B [DeFiLlama](https://defillama.com/protocol/uniswap)
 For fundraising data, always lead with:
 1. https://crypto-fundraising.info/
 2. https://www.rootdata.com/
-3. https://www.rootdata.com/
 
 Never start with general Google search for discovery.
 
@@ -58,10 +57,6 @@ Always check for recent rebrands when:
 - Search results show different names
 - Social handles have changed
 
-Common examples:
-- DolarApp → ARQ
-- Facebook → Meta (not crypto, but principle applies)
-
 ### 6. Cross-Reference
 
 Always cross-check key metrics across multiple sources:
@@ -82,22 +77,22 @@ If sources disagree:
 
 If data is missing, say so explicitly:
 ```
-⚠ Funding data not found. Possible reasons:
-   - Bootstrapped project (no external funding)
-   - Data not yet indexed by sources
-   - Private round (not publicly disclosed)
+Funding data not found. Possible reasons:
+- Bootstrapped project (no external funding)
+- Data not yet indexed by sources
+- Private round (not publicly disclosed)
 ```
 
 ### 8. No Search for Discovery
 
 For discovery queries, go directly to the source:
 
-❌ Wrong:
+Wrong:
 ```
 WebSearch: "crypto projects under 5M TVL"
 ```
 
-✅ Correct:
+Correct:
 ```
 WebFetch: https://api.llama.fi/protocols
 Filter: tvl < 5000000
@@ -129,7 +124,10 @@ Use whichever tool is available:
 | User Input | Action |
 |------------|--------|
 | `/crypto-discovery discover <query>` | Run discovery across sources |
-| `/crypto-discovery research <project>` | Run 7-phase deep research |
+| `/crypto-discovery research <project>` | Deep research (single project) |
+| `/crypto-discovery research "<topic>"` | Deep research (multi-item) |
+| `/crypto-discovery research continue` | Resume incomplete deep research |
+| `/crypto-discovery research report` | Regenerate report from JSONs |
 | `/crypto-discovery watchlist` | List tracked projects |
 | `/crypto-discovery watchlist add <project>` | Add to watchlist |
 | `/crypto-discovery watchlist remove <project>` | Remove from watchlist |
@@ -144,25 +142,84 @@ Use whichever tool is available:
 5. **Merge** — Combine results, score by filter match
 6. **Present** — Table with source labels and data quality notes
 
-## Research Workflow
+## Deep Research Pipeline
 
-1. **Phase 1: Overview** — Website, description, founded, category, chains
-2. **Phase 2: On-Chain** — TVL, token, holders, contracts (DeFiLlama, CoinGecko, DeBank, Blockscout)
-3. **Phase 3: Funding** — Rounds, amounts, investors (CryptoFundraising, RootData)
-4. **Phase 4: Social** — Twitter, Discord, GitHub (WebSearch + AgentCash if available)
-5. **Phase 5: Technical** — Tech stack, audits, security (GitHub, Blockscout, The Block)
-6. **Phase 6: Governance** — Proposals, voting (Snapshot)
-7. **Phase 7: Verify** — Cross-reference all metrics, flag conflicts
+The `/crypto-discovery research` command uses a structured pipeline with parallel sub-agents:
+
+### Phase 1: Outline Generation
+
+1. **Load Config** — Read `config/sources.yaml`
+2. **Detect Mode** — Single project (1-item outline) or topic (multi-item outline)
+3. **Generate Items** — Model knowledge + web search supplement using crypto sources
+4. **Confirm** — Show items to user, allow add/remove
+5. **Save** — `Research/{topic_slug}/outline.yaml`
+
+### Phase 2: Field Schema
+
+1. **Load Defaults** — From `references/deep-research-fields.yaml`
+2. **Customize** — Ask user to add/remove fields or categories
+3. **Save** — `Research/{topic_slug}/fields.yaml`
+
+Default field categories:
+- **Overview** (7 fields, 4 required): name, website, founded, category, chains, description, token_symbol
+- **On-Chain Data** (9 fields, 1 required): tvl, tvl_change_7d, market_cap, fdv, token_price, fees_24h, revenue_24h, active_addresses_24h, transactions_24h
+- **Funding** (4 fields): total_raised, funding_rounds, lead_investors, latest_valuation
+- **Social** (7 fields): twitter_handle, twitter_followers, github_org, github_stars, github_last_commit, github_contributors, discord_members
+- **Technical** (4 fields): tech_stack, audits, security_incidents, bug_bounty
+- **Governance** (3 fields): snapshot_space, proposals_count, participation_rate
+
+### Phase 3: Parallel Sub-Agent Execution
+
+1. **Resume Check** — Skip items with valid JSONs in `results/`
+2. **Batch Execute** — Launch sub-agents in batches (default: 5 parallel)
+3. **Sub-Agent Task** — Research item using all 24 crypto sources, fill JSON per schema
+4. **Validation Loop** — Each sub-agent runs `validate_json.py`:
+   - PASS: All required fields present → complete
+   - FAIL: Missing required fields → re-search → re-validate → repeat
+5. **Uncertainty Tracking** — Fields that can't be confirmed marked `[uncertain]`
+6. **Save** — `Research/{topic_slug}/results/{item_slug}.json`
+
+**Sub-Agent Source Routing:**
+
+| Category | Primary Sources | Fallback |
+|----------|----------------|----------|
+| Overview | CoinGecko, CoinMarketCap, RootData | The Block, CoinDesk |
+| On-Chain | DeFiLlama, CoinGecko, DeBank, Blockscout | Flipside, Dune |
+| Funding | CryptoFundraising.info, RootData | Crunchbase, The Block |
+| Social | Twitter WebSearch, GitHub WebSearch | AgentCash (if key) |
+| Technical | GitHub, Blockscout | The Block |
+| Governance | Snapshot | The Block |
+
+**Sub-Agent Rules:**
+- Use platform's default model (no hardcoding)
+- Cite every fact with source URL
+- Label exact vs approximate metrics
+- Cross-reference key metrics
+- Mark uncertain fields with `[uncertain]`
+- Add `uncertain[]` array
+- Validate before completing
+
+### Phase 4: Report Generation
+
+1. **Scan JSONs** — Read all `results/*.json`
+2. **Ask User** — Which fields for summary table?
+3. **Generate** — Run `lib/deep-research/generate_report.py`
+4. **Save** — `Research/{topic_slug}/report.md`
+
+Report includes:
+- **Summary table** (multi-item): One row per project with selected fields
+- **Table of Contents**: Anchor links to each project
+- **Detailed sections**: Per-project, grouped by field category
+- **Data quality notes**: Uncertain fields flagged per project
+- **Source citations**: Every fact includes source URL
+
+### Resume Support
+
+`/crypto-discovery research continue` skips items with completed JSONs. Only launches sub-agents for incomplete items.
 
 ## Output Templates
 
-Use `references/research-template.md` for research output.
-
-Always include:
-- Source URLs for every fact
-- Data quality notes section
-- Cross-reference verification table
-- Approximate vs exact labels
+Research output is JSON per item, validated against `fields.yaml`, then compiled into `report.md` by `generate_report.py`.
 
 ## Error Handling
 
@@ -175,6 +232,8 @@ Always include:
 | API error | Use fallback source |
 | Missing premium key | Use free fallback, note limitation |
 | Data conflict | Show both values, flag conflict |
+| Validation fails | Re-search missing fields, re-validate |
+| Uncertain field | Mark [uncertain], add to uncertain[] array |
 
 ## Watchlist
 
@@ -214,7 +273,8 @@ On session start, the hook in `hooks/session-start.sh` runs:
 2. Count enabled sources
 3. Count API keys configured
 4. Count watchlisted projects
-5. Report summary to user
+5. Count deep research results
+6. Report summary to user
 
 ## Safety
 
@@ -224,6 +284,8 @@ On session start, the hook in `hooks/session-start.sh` runs:
 - Always disclose data quality issues
 - Respect rate limits
 - Use HTTPS only
+- Validate all JSON output against field schema
+- Mark uncertain data explicitly
 
 ## Updates
 

@@ -3,7 +3,8 @@ name: crypto-discovery
 description: |
   Crypto research sub-agent for Claude Code. Discover and research crypto/Web3 projects 
   using 24+ data sources. Free core works out of the box. Add API keys to unlock premium data.
-version: 1.0.0
+  Deep research pipeline with parallel sub-agents, field validation, and report generation.
+version: 2.0.0
 ---
 
 # Crypto Discovery
@@ -16,17 +17,45 @@ A general-purpose crypto research sub-agent that can be installed into Claude Co
 - **Pure factual research.** Metrics, funding, tech, community, governance.
 - **Free core, optional premium.** 13 sources work without any API keys. Add keys to unlock 11 more.
 - **Cite everything.** Every fact must have a source URL.
+- **Deep research pipeline.** Parallel sub-agents, field validation, uncertainty tracking, resume capability.
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
 | `/crypto-discovery discover <query>` | Find projects by natural language across all enabled sources |
-| `/crypto-discovery research <project>` | Deep-dive factual research on a specific project (7 phases) |
+| `/crypto-discovery research <project>` | Deep research on a single project (1-item pipeline) |
+| `/crypto-discovery research "<topic>"` | Deep research on a topic (multi-item pipeline) |
+| `/crypto-discovery research continue` | Resume incomplete deep research (skip completed items) |
+| `/crypto-discovery research report` | Regenerate report from existing JSON results |
 | `/crypto-discovery watchlist` | List saved/bookmarked projects |
-| `/crypto-discovery watchlist add <project> [tags...]` | Save a project to watchlist |
+| `/crypto-discovery watchlist add <project>` | Save a project to watchlist |
 | `/crypto-discovery watchlist remove <project>` | Remove from watchlist |
 | `/crypto-discovery setup` | Configure sources, API keys, rate limits |
+
+## Deep Research Pipeline
+
+The `/crypto-discovery research` command uses a deep research pipeline adapted from System 2:
+
+1. **Outline Generation** — Detect single project vs topic, generate item list, web search supplement
+2. **Field Schema** — Load crypto-specific field definitions (6 categories, ~30 fields), user can customize
+3. **Parallel Sub-Agent Execution** — Launch background agents (default: 5 per batch) to research each item using all 24 crypto sources
+4. **Validation Loop** — Each sub-agent validates JSON output against field schema, re-searches missing required fields
+5. **Uncertainty Tracking** — Fields that can't be confirmed are marked `[uncertain]` and listed in `uncertain[]` array
+6. **Report Generation** — Python script reads all JSONs, generates comparative markdown report with source citations
+
+### Output Structure
+
+```
+Research/{topic_slug}/
+├── outline.yaml      # Items list + execution config
+├── fields.yaml       # Field definitions (customizable)
+├── results/           # JSON per project
+│   ├── uniswap.json
+│   ├── arbitrum.json
+│   └── ...
+└── report.md          # Generated comparative report
+```
 
 ## Quick Start
 
@@ -44,11 +73,20 @@ cp ~/.claude/plugins/crypto-discovery/skills/crypto-discovery/SKILL.md ~/.claude
 # 4. Discover projects
 /crypto-discovery discover defillama protocols under 5M TVL on Base
 
-# 5. Research a project
+# 5. Research a single project
 /crypto-discovery research Uniswap
+
+# 6. Research a topic (multi-item)
+/crypto-discovery research "L2 protocols on Ethereum"
+
+# 7. Resume incomplete research
+/crypto-discovery research continue
+
+# 8. Regenerate report
+/crypto-discovery research report
 ```
 
-## Source Catalog (25 Sources)
+## Source Catalog (24 Sources)
 
 ### Core Free (13 sources — no keys needed)
 
@@ -97,7 +135,7 @@ cp ~/.claude/plugins/crypto-discovery/skills/crypto-discovery/SKILL.md ~/.claude
 3. **Route to Sources** — Query is sent to the appropriate source handlers based on enabled sources and available keys
 4. **Rate Limit** — Automatic delays per source type (API: 500ms, WebSearch: 1s, Browser: 2s)
 5. **Merge & Score** — Results from multiple sources are merged, deduplicated, and scored by filter match
-6. **Research (optional)** — Deep-dive runs 7 phases: Overview → On-Chain → Funding → Social → Technical → Governance → Verify
+6. **Deep Research** — Parallel sub-agents research each item using all 24 sources, validate JSON, track uncertainty
 
 ## Architecture
 
@@ -106,21 +144,26 @@ crypto-discovery/
 ├── skills/crypto-discovery/SKILL.md    # Skill registration
 ├── commands/                            # Command routing & UX
 │   ├── discover.md                      # /crypto-discovery discover
-│   ├── research.md                      # /crypto-discovery research
+│   ├── research.md                      # /crypto-discovery research (deep research pipeline)
 │   └── setup.md                         # /crypto-discovery setup
 ├── lib/
-│   └── source_manager.py               # Core Python: SourceManager, QueryInterpreter, RateLimiter, ResultMerger, WatchlistManager, ResearchEngine
+│   ├── source_manager.py               # Core Python module
+│   └── deep-research/
+│       ├── validate_json.py            # JSON field coverage validator
+│       └── generate_report.py          # JSON → markdown report generator
 ├── config/
-│   └── sources.example.yaml            # 25-source configuration template
+│   └── sources.example.yaml            # 24-source configuration template
 ├── watchlist/
 │   └── watchlist.yaml                  # Persisted bookmarks
 ├── references/
-│   └── research-template.md            # Neutral 7-phase research output
+│   ├── deep-research-fields.yaml       # Default crypto field definitions
+│   ├── deep-research-outline-template.yaml # Outline template
+│   └── deep-research-subagent.md       # Sub-agent prompt template
 ├── hooks/
 │   └── session-start.sh                # Context loader
-├── README.md                           # This file
+├── README.md
 ├── CLAUDE.md                           # Agent instructions
-└── LICENSE                             # MIT
+└── LICENSE
 ```
 
 ## Configuration
